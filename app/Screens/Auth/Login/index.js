@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Button, Pressable, TouchableOpacity } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -6,10 +7,12 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const navigation = useNavigation();
+
 
     const handleLogin = () => {
-        console.log('Email:', email);
-        console.log('Password:', password);
+        navigation.navigate("listBarang");
+
     };
 
     const togglePasswordVisibility = () => {
@@ -69,6 +72,7 @@ export default Login;
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         padding: 24,
         justifyContent: "center",
     },
@@ -121,6 +125,6 @@ const styles = StyleSheet.create({
     loginButtonText: {
         color: 'white',
         fontWeight: 'bold',
-       
+
     },
 });

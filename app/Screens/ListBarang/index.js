@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import Modal from "react-native-modal";
+import { DrawerActions } from '@react-navigation/native';
+
 
 
 const ListBarang = () => {
@@ -28,6 +30,8 @@ const ListBarang = () => {
           name="menu"
           size={25}
           color="white"
+          onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+
         />
         <MaterialIcons
           name="search"

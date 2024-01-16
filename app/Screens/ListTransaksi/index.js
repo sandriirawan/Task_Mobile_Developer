@@ -1,7 +1,7 @@
 import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation } from '@react-navigation/native';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 import Modal from "react-native-modal";
 
 
@@ -28,6 +28,7 @@ const ListTransaksi = () => {
                     name="menu"
                     size={25}
                     color="white"
+                    onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
                 />
                 <MaterialIcons
                     name="search"

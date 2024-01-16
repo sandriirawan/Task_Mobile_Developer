@@ -8,11 +8,46 @@ import ListBarang from '../Screens/ListBarang';
 import InputBarang from '../Screens/ListBarang/InputBarang';
 import EditBarang from '../Screens/ListBarang/EditBarang';
 import EditTransaksi from '../Screens/ListTransaksi/EditTransaksi';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 
 
 const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator()
 
+const DrawerNavigation = () => {
+    const Barang = () => (
+        <MaterialIcons name="list-alt" size={25} color="black" />
+    );
+    const Transaksi = () => (
+        <MaterialIcons name="receipt-long" size={25} color="black" />
+    );
+    return (
+        <Drawer.Navigator initialRouteName="Drawer">
+            <Drawer.Screen
+                name="listBarang"
+                component={ListBarang}
+                options={{
+                    title: 'List Barang',
+                    headerShown: false,
+                    drawerLabel: 'List Barang',
+                    drawerIcon: Barang
+                }}
+            />
+            <Drawer.Screen
+                name="listTransaksi"
+                component={ListTransaksi}
+                options={{
+                    title: 'List Transaksi',
+                    headerShown: false,
+                    drawerLabel: 'List Transaksi',
+                    drawerIcon: Transaksi
+                }}
+            />
+        </Drawer.Navigator>
+    );
+};
 
 const Navigation = () => {
     return (
@@ -25,7 +60,7 @@ const Navigation = () => {
                 />
                 <Stack.Screen
                     name="listBarang"
-                    component={ListBarang}
+                    component={DrawerNavigation}
                     options={{ headerShown: false }}
                 />
                 <Stack.Screen
@@ -36,11 +71,6 @@ const Navigation = () => {
                 <Stack.Screen
                     name="editBarang"
                     component={EditBarang}
-                    options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                    name="listTransaksi"
-                    component={ListTransaksi}
                     options={{ headerShown: false }}
                 />
                 <Stack.Screen
