@@ -1,10 +1,10 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 
-const InputBarang = () => {
+const EditBarang = () => {
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Barang</Text>
+            <Text style={styles.title}>Edit Barang</Text>
             <View style={styles.placeholderContainer}>
                 <Text style={styles.placeholder}>Kode Barang</Text>
             </View>
@@ -62,7 +62,7 @@ const InputBarang = () => {
     )
 }
 
-export default InputBarang
+export default EditBarang
 
 const styles = StyleSheet.create({
     container: {

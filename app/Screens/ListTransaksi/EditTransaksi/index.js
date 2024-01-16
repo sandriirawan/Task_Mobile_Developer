@@ -1,58 +1,59 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 
-const InputBarang = () => {
+const EditTransaksi = () => {
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Barang</Text>
+            <Text style={styles.title}>EDIT TRANSAKSI</Text>
             <View style={styles.placeholderContainer}>
-                <Text style={styles.placeholder}>Kode Barang</Text>
+                <Text style={styles.placeholder}>Nomor</Text>
             </View>
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Kode Barang</Text>
+                <Text style={styles.label}>Nomor</Text>
                 <TextInput
                     style={styles.inputNomor}
-                    placeholder="Kode Barang"
+                    placeholder="Nomor"
                 />
             </View>
             <View style={styles.placeholderContainer}>
-                <Text style={styles.placeholder}>Nomor Barang</Text>
+                <Text style={styles.placeholder}>Tanggal</Text>
             </View>
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Nomor Barang</Text>
+                <Text style={styles.label}>Nomor</Text>
                 <TextInput
                     style={styles.inputNomor}
-                    placeholder="Nomor Barang"
+                    placeholder="Tanggal"
+                />
+            </View>
+            <Text style={styles.title2}>EDIT CUSTOMER</Text>
+            <View style={styles.placeholderContainer}>
+                <Text style={styles.placeholder}>Kode</Text>
+            </View>
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>Kode</Text>
+                <TextInput
+                    style={styles.inputNomor}
+                    placeholder="Kode"
                 />
             </View>
             <View style={styles.placeholderContainer}>
-                <Text style={styles.placeholder}>Harga</Text>
+                <Text style={styles.placeholder}>Nama</Text>
             </View>
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Harga</Text>
+                <Text style={styles.label}>Nama</Text>
                 <TextInput
                     style={styles.inputNomor}
-                    placeholder="Harga"
+                    placeholder="Nama"
                 />
             </View>
             <View style={styles.placeholderContainer}>
-                <Text style={styles.placeholder}>Jumlah</Text>
+                <Text style={styles.placeholder}>No Telepon</Text>
             </View>
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Jumlah</Text>
+                <Text style={styles.label}>No Telepon</Text>
                 <TextInput
                     style={styles.inputNomor}
-                    placeholder="Jumlah"
-                />
-            </View>
-            <View style={styles.placeholderContainer}>
-                <Text style={styles.placeholder}>Total</Text>
-            </View>
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Total</Text>
-                <TextInput
-                    style={styles.inputNomor}
-                    placeholder="Total"
+                    placeholder="TangNo Telepon"
                 />
             </View>
             <TouchableOpacity style={styles.simpanButton} >
@@ -62,7 +63,7 @@ const InputBarang = () => {
     )
 }
 
-export default InputBarang
+export default EditTransaksi
 
 const styles = StyleSheet.create({
     container: {
@@ -74,8 +75,13 @@ const styles = StyleSheet.create({
     title: {
         fontWeight: "bold",
         color: "black",
-        fontSize: 30,
-        paddingVertical: 30
+        fontSize: 25
+    },
+    title2: {
+        fontWeight: "bold",
+        color: "black",
+        fontSize: 25,
+        marginTop: 30
     },
     placeholderContainer: {
         alignSelf: 'flex-start',

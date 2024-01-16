@@ -1,14 +1,24 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import Modal from "react-native-modal";
+
 
 const ListTransaksi = () => {
     const navigation = useNavigation();
+    const [isModalVisible, setModalVisible] = useState(false);
 
-    const addTransaksi = (userId) => {
+    const toggleModal = () => {
+        setModalVisible(!isModalVisible);
+    };
+
+    const InputTransaksi = () => {
         navigation.navigate("inputTransaksi");
+    };
+
+    const EditTransaksi = () => {
+        navigation.navigate("editTransaksi");
     };
 
     return (
@@ -51,13 +61,28 @@ const ListTransaksi = () => {
                         </View>
                         <View style={styles.line}></View>
                         <View style={styles.wrapButton}>
-                            <TouchableOpacity style={styles.loginEdit} >
-                                <Text style={styles.loginEditText}>edit</Text>
+                            <TouchableOpacity style={styles.loginEdit} onPress={EditTransaksi} >
+                                <Text style={styles.loginEditText}>Edit</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.loginHapus} >
-                                <Text style={styles.loginHapusText}>edit</Text>
+                            <TouchableOpacity style={styles.loginHapus} onPress={toggleModal}>
+                                <Text style={styles.loginHapusText}>Hapus</Text>
                             </TouchableOpacity>
                         </View>
+                        <Modal isVisible={isModalVisible}>
+                            <View style={{ backgroundColor: "white", height: 350, justifyContent: "center", alignItems: "center" }}>
+                                <Text style={styles.titleModal}>Apakah yakin ingin menghapus Transaksi?</Text>
+                                <MaterialIcons
+                                    name="delete-forever"
+                                    size={100}
+                                    color="black"
+                                />
+                                <View style={styles.wrapButton}>
+                                    <Button title="Batal" color={"grey"} onPress={toggleModal} />
+                                    <View style={{ paddingHorizontal: 5 }}></View>
+                                    <Button title="Hapus" color={"red"} onPress={toggleModal} />
+                                </View>
+                            </View>
+                        </Modal>
                     </View>
                     <View style={styles.card}>
                         <Text style={styles.nomorTransaksi}>202101-0001</Text>
@@ -157,7 +182,7 @@ const ListTransaksi = () => {
                     </View>
                 </View>
             </ScrollView>
-            <TouchableOpacity style={styles.floatingButton} onPress={addTransaksi}>
+            <TouchableOpacity style={styles.floatingButton} onPress={InputTransaksi}>
                 <MaterialIcons
                     name="add"
                     size={30}
@@ -255,6 +280,13 @@ const styles = StyleSheet.create({
         color: '#364775',
         fontWeight: 'bold',
         paddingHorizontal: 25
+    },
+    titleModal: {
+        fontWeight: "bold",
+        color: "black",
+        fontSize: 20,
+        textAlign: "center",
+        paddingVertical: 30
     },
     floatingButton: {
         position: 'absolute',

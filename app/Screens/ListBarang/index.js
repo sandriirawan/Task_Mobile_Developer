@@ -1,14 +1,24 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import Modal from "react-native-modal";
+
 
 const ListBarang = () => {
   const navigation = useNavigation();
+  const [isModalVisible, setModalVisible] = useState(false);
 
-  const addTransaksi = (userId) => {
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
+  const inputBarang = () => {
     navigation.navigate("inputBarang");
+  };
+
+  const editBarang = () => {
+    navigation.navigate("editBarang");
   };
 
   return (
@@ -26,18 +36,18 @@ const ListBarang = () => {
         />
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Text style={styles.title}>LIST BARANG</Text>
         <View style={styles.cardContainer}>
+          <Text style={styles.titleBarang}>LIST BARANG</Text>
           <View style={styles.card}>
-            <Text style={styles.nomorTransaksi}>202101-0001</Text>
+            <Text style={styles.nomorTransaksi}>01</Text>
             <View style={styles.wrap}>
               <View style={styles.leftContent}>
-                <Text style={styles.title}>Nama Customer</Text>
-                <Text style={styles.blackText}>Cust A</Text>
+                <Text style={styles.title}>Nama Barang</Text>
+                <Text style={styles.blackText}>Barang A</Text>
               </View>
               <View style={styles.rightContent}>
-                <Text style={styles.title}>Tanggal</Text>
-                <Text style={styles.blackText}>01-Januari-2024</Text>
+                <Text style={styles.title}>Kode Barang</Text>
+                <Text style={styles.blackText}>A001</Text>
               </View>
             </View>
             <View style={styles.wrap}>
@@ -52,24 +62,71 @@ const ListBarang = () => {
             </View>
             <View style={styles.line}></View>
             <View style={styles.wrapButton}>
-              <TouchableOpacity style={styles.loginEdit} >
-                <Text style={styles.loginEditText}>edit</Text>
+              <TouchableOpacity style={styles.buttonEdit} onPress={editBarang} >
+                <Text style={styles.buttonEditText}>Edit</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.loginHapus} >
-                <Text style={styles.loginHapusText}>edit</Text>
+              <TouchableOpacity style={styles.buttonHapus} onPress={toggleModal}>
+                <Text style={styles.buttonHapusText} >Hapus</Text>
+              </TouchableOpacity>
+              <Modal isVisible={isModalVisible}>
+                <View style={{ backgroundColor: "white", height: 350, justifyContent: "center", alignItems: "center" }}>
+                  <Text style={styles.titleModal}>Apakah yakin ingin menghapus Barang?</Text>
+                  <MaterialIcons
+                    name="delete-forever"
+                    size={100}
+                    color="black"
+                  />
+                  <View style={styles.wrapButton}>
+                    <Button title="Batal" color={"grey"} onPress={toggleModal} />
+                    <View style={{ paddingHorizontal: 5 }}></View>
+                    <Button title="Hapus" color={"red"} onPress={toggleModal} />
+                  </View>
+                </View>
+              </Modal>
+            </View>
+          </View>
+          <View style={styles.card}>
+            <Text style={styles.nomorTransaksi}>01</Text>
+            <View style={styles.wrap}>
+              <View style={styles.leftContent}>
+                <Text style={styles.title}>Nama Barang</Text>
+                <Text style={styles.blackText}>Barang A</Text>
+              </View>
+              <View style={styles.rightContent}>
+                <Text style={styles.title}>Kode Barang</Text>
+                <Text style={styles.blackText}>A001</Text>
+              </View>
+            </View>
+            <View style={styles.wrap}>
+              <View style={styles.leftContent}>
+                <Text style={styles.title}>Jumlah Barang</Text>
+                <Text style={styles.blackText}>2</Text>
+              </View>
+              <View style={styles.rightContent}>
+                <Text style={styles.title}>Total</Text>
+                <Text style={styles.blackText}>245.000.00</Text>
+              </View>
+            </View>
+            <View style={styles.line}></View>
+            <View style={styles.wrapButton}>
+              <TouchableOpacity style={styles.buttonEdit} >
+                <Text style={styles.buttonEditText}>Edit</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonHapus} >
+                <Text style={styles.buttonHapusText}>Hapus</Text>
               </TouchableOpacity>
             </View>
           </View>
           <View style={styles.card}>
-            <Text style={styles.nomorTransaksi}>202101-0001</Text>
+            <Text style={styles.nomorTransaksi}>01</Text>
             <View style={styles.wrap}>
               <View style={styles.leftContent}>
-                <Text style={styles.title}>Nama Customer</Text>
-                <Text style={styles.blackText}>Cust A</Text>
+                <Text style={styles.title}>Nama Barang</Text>
+                <Text style={styles.blackText}>Barang A</Text>
               </View>
               <View style={styles.rightContent}>
-                <Text style={styles.title}>Tanggal</Text>
-                <Text style={styles.blackText}>01-Januari-2024</Text>
+                <Text style={styles.title}>Kode Barang</Text>
+                <Text style={styles.blackText}>A001</Text>
               </View>
             </View>
             <View style={styles.wrap}>
@@ -84,56 +141,24 @@ const ListBarang = () => {
             </View>
             <View style={styles.line}></View>
             <View style={styles.wrapButton}>
-              <TouchableOpacity style={styles.loginEdit} >
-                <Text style={styles.loginEditText}>edit</Text>
+              <TouchableOpacity style={styles.buttonEdit} >
+                <Text style={styles.buttonEditText}>Edit</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.loginHapus} >
-                <Text style={styles.loginHapusText}>edit</Text>
+              <TouchableOpacity style={styles.buttonHapus} >
+                <Text style={styles.buttonHapusText}>Hapus</Text>
               </TouchableOpacity>
             </View>
           </View>
           <View style={styles.card}>
-            <Text style={styles.nomorTransaksi}>202101-0001</Text>
+            <Text style={styles.nomorTransaksi}>01</Text>
             <View style={styles.wrap}>
               <View style={styles.leftContent}>
-                <Text style={styles.title}>Nama Customer</Text>
-                <Text style={styles.blackText}>Cust A</Text>
+                <Text style={styles.title}>Nama Barang</Text>
+                <Text style={styles.blackText}>Barang A</Text>
               </View>
               <View style={styles.rightContent}>
-                <Text style={styles.title}>Tanggal</Text>
-                <Text style={styles.blackText}>01-Januari-2024</Text>
-              </View>
-            </View>
-            <View style={styles.wrap}>
-              <View style={styles.leftContent}>
-                <Text style={styles.title}>Jumlah Barang</Text>
-                <Text style={styles.blackText}>2</Text>
-              </View>
-              <View style={styles.rightContent}>
-                <Text style={styles.title}>Total</Text>
-                <Text style={styles.blackText}>245.000.00</Text>
-              </View>
-            </View>
-            <View style={styles.line}></View>
-            <View style={styles.wrapButton}>
-              <TouchableOpacity style={styles.loginEdit} >
-                <Text style={styles.loginEditText}>edit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.loginHapus} >
-                <Text style={styles.loginHapusText}>edit</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.card}>
-            <Text style={styles.nomorTransaksi}>202101-0001</Text>
-            <View style={styles.wrap}>
-              <View style={styles.leftContent}>
-                <Text style={styles.title}>Nama Customer</Text>
-                <Text style={styles.blackText}>Cust A</Text>
-              </View>
-              <View style={styles.rightContent}>
-                <Text style={styles.title}>Tanggal</Text>
-                <Text style={styles.blackText}>01-Januari-2024</Text>
+                <Text style={styles.title}>Kode Barang</Text>
+                <Text style={styles.blackText}>A001</Text>
               </View>
             </View>
             <View style={styles.wrap}>
@@ -148,17 +173,17 @@ const ListBarang = () => {
             </View>
             <View style={styles.line}></View>
             <View style={styles.wrapButton}>
-              <TouchableOpacity style={styles.loginEdit} >
-                <Text style={styles.loginEditText}>edit</Text>
+              <TouchableOpacity style={styles.buttonEdit} >
+                <Text style={styles.buttonEditText}>Edit</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.loginHapus} >
-                <Text style={styles.loginHapusText}>edit</Text>
+              <TouchableOpacity style={styles.buttonHapus} >
+                <Text style={styles.buttonHapusText}>Hapus</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </ScrollView>
-      <TouchableOpacity style={styles.floatingButton} onPress={addTransaksi}>
+      <TouchableOpacity style={styles.floatingButton} onPress={inputBarang}>
         <MaterialIcons
           name="add"
           size={30}
@@ -184,14 +209,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
   },
-  title: {
-    fontWeight: "bold",
-    color: "black",
-    fontSize: 50
-  },
   cardContainer: {
     padding: 10,
     flex: 1,
+  },
+  titleBarang: {
+    fontWeight: "bold",
+    color: "black",
+    fontSize: 25,
+    textAlign: "center",
+    paddingVertical: 30
   },
   card: {
     padding: 20,
@@ -237,19 +264,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 30
   },
-  loginEdit: {
+  buttonEdit: {
     backgroundColor: '#364775',
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
     marginRight: 10
   },
-  loginEditText: {
+  buttonEditText: {
     color: 'white',
     fontWeight: 'bold',
     paddingHorizontal: 25
   },
-  loginHapus: {
+  buttonHapus: {
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
@@ -257,10 +284,17 @@ const styles = StyleSheet.create({
     borderColor: '#364775',
     marginRight: 10
   },
-  loginHapusText: {
+  buttonHapusText: {
     color: '#364775',
     fontWeight: 'bold',
     paddingHorizontal: 25
+  },
+  titleModal: {
+    fontWeight: "bold",
+    color: "black",
+    fontSize: 20,
+    textAlign: "center",
+    paddingVertical: 30
   },
   floatingButton: {
     position: 'absolute',
