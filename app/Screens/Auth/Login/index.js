@@ -6,14 +6,33 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState(false)
     const [showPassword, setShowPassword] = useState(false);
     const navigation = useNavigation();
 
 
-    const handleLogin = () => {
-        navigation.navigate("listBarang");
+    const handleLogin = async () => {
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
 
+            const data = await response.json();
+            console.log(data.success);
+            if (data.success === true) {
+                navigation.navigate('listBarang');
+            } else {
+                setErrorMessage(data.errorMessage);
+            }
+        } catch (error) {
+            console.error('Error during login:', error);
+        }
     };
+
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -61,6 +80,9 @@ const Login = () => {
                 </View>
             </View>
             <Text style={styles.forgot}>Forgot Password?</Text>
+            {errorMessage !== '' && (
+                <Text style={styles.errorMessage}>{errorMessage}</Text>
+            )}
             <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
                 <Text style={styles.loginButtonText}>Login</Text>
             </TouchableOpacity>
@@ -126,5 +148,11 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
 
+    },
+
+    errorMessage: {
+        color: 'red',
+        marginBottom: 10,
+        textAlign: 'center',
     },
 });

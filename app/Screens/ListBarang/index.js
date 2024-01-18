@@ -1,26 +1,61 @@
 import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation } from '@react-navigation/native';
+import { DrawerActions, useFocusEffect, useNavigation } from '@react-navigation/native';
 import Modal from "react-native-modal";
-import { DrawerActions } from '@react-navigation/native';
-
+import axios from 'axios';
 
 
 const ListBarang = () => {
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [barang, setBarang] = useState([])
+
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('/api/barang');
+      setBarang(response?.data?.barang);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
+
+  const deleteBarang = async (id) => {
+    try {
+      await axios.delete(`/api/barang/${id}`);
+      toggleModal();
+      fetchData();
+    } catch (error) {
+      console.error('Error during deleting barang:', error);
+    }
+  };
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
-  const inputBarang = () => {
-    navigation.navigate("inputBarang");
+  const openDeleteConfirmation = (id) => {
+    setSelectedItemId(id);
+    toggleModal();
+  };
+  const inputBarang = (id) => {
+    navigation.navigate("inputBarang", { id });
   };
 
-  const editBarang = () => {
-    navigation.navigate("editBarang");
+  const editBarang = (id) => {
+    navigation.navigate("editBarang", { id });
   };
 
   return (
@@ -42,151 +77,57 @@ const ListBarang = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.cardContainer}>
           <Text style={styles.titleBarang}>LIST BARANG</Text>
-          <View style={styles.card}>
-            <Text style={styles.nomorTransaksi}>01</Text>
-            <View style={styles.wrap}>
-              <View style={styles.leftContent}>
-                <Text style={styles.title}>Nama Barang</Text>
-                <Text style={styles.blackText}>Barang A</Text>
-              </View>
-              <View style={styles.rightContent}>
-                <Text style={styles.title}>Kode Barang</Text>
-                <Text style={styles.blackText}>A001</Text>
-              </View>
-            </View>
-            <View style={styles.wrap}>
-              <View style={styles.leftContent}>
-                <Text style={styles.title}>Jumlah Barang</Text>
-                <Text style={styles.blackText}>2</Text>
-              </View>
-              <View style={styles.rightContent}>
-                <Text style={styles.title}>Total</Text>
-                <Text style={styles.blackText}>245.000.00</Text>
-              </View>
-            </View>
-            <View style={styles.line}></View>
-            <View style={styles.wrapButton}>
-              <TouchableOpacity style={styles.buttonEdit} onPress={editBarang} >
-                <Text style={styles.buttonEditText}>Edit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonHapus} onPress={toggleModal}>
-                <Text style={styles.buttonHapusText} >Hapus</Text>
-              </TouchableOpacity>
-              <Modal isVisible={isModalVisible}>
-                <View style={{ backgroundColor: "white", height: 350, justifyContent: "center", alignItems: "center" }}>
-                  <Text style={styles.titleModal}>Apakah yakin ingin menghapus Barang?</Text>
-                  <MaterialIcons
-                    name="delete-forever"
-                    size={100}
-                    color="black"
-                  />
-                  <View style={styles.wrapButton}>
-                    <Button title="Batal" color={"grey"} onPress={toggleModal} />
-                    <View style={{ paddingHorizontal: 5 }}></View>
-                    <Button title="Hapus" color={"red"} onPress={toggleModal} />
-                  </View>
+          {barang.map(item => (
+            <View style={styles.card} key={item.id}>
+              <Text style={styles.nomorTransaksi}>{item.id}</Text>
+              <View style={styles.wrap}>
+                <View style={styles.leftContent}>
+                  <Text style={styles.title}>Nama Barang</Text>
+                  <Text style={styles.blackText}>{item.namaBarang}</Text>
                 </View>
-              </Modal>
-            </View>
-          </View>
-          <View style={styles.card}>
-            <Text style={styles.nomorTransaksi}>01</Text>
-            <View style={styles.wrap}>
-              <View style={styles.leftContent}>
-                <Text style={styles.title}>Nama Barang</Text>
-                <Text style={styles.blackText}>Barang A</Text>
+                <View style={styles.rightContent}>
+                  <Text style={styles.title}>Kode Barang</Text>
+                  <Text style={styles.blackText}>{item.kodeBarang}</Text>
+                </View>
               </View>
-              <View style={styles.rightContent}>
-                <Text style={styles.title}>Kode Barang</Text>
-                <Text style={styles.blackText}>A001</Text>
+              <View style={styles.wrap}>
+                <View style={styles.leftContent}>
+                  <Text style={styles.title}>Jumlah Barang</Text>
+                  <Text style={styles.blackText}>{item.jumlahBarang}</Text>
+                </View>
+                <View style={styles.rightContent}>
+                  <Text style={styles.title}>Total</Text>
+                  <Text style={styles.blackText}>{item.totalBarang}</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.wrap}>
-              <View style={styles.leftContent}>
-                <Text style={styles.title}>Jumlah Barang</Text>
-                <Text style={styles.blackText}>2</Text>
-              </View>
-              <View style={styles.rightContent}>
-                <Text style={styles.title}>Total</Text>
-                <Text style={styles.blackText}>245.000.00</Text>
-              </View>
-            </View>
-            <View style={styles.line}></View>
-            <View style={styles.wrapButton}>
-              <TouchableOpacity style={styles.buttonEdit} >
-                <Text style={styles.buttonEditText}>Edit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonHapus} >
-                <Text style={styles.buttonHapusText}>Hapus</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.card}>
-            <Text style={styles.nomorTransaksi}>01</Text>
-            <View style={styles.wrap}>
-              <View style={styles.leftContent}>
-                <Text style={styles.title}>Nama Barang</Text>
-                <Text style={styles.blackText}>Barang A</Text>
-              </View>
-              <View style={styles.rightContent}>
-                <Text style={styles.title}>Kode Barang</Text>
-                <Text style={styles.blackText}>A001</Text>
+              <View style={styles.line}></View>
+              <View style={styles.wrapButton}>
+                <TouchableOpacity style={styles.buttonEdit} onPress={() => editBarang(item.id)}>
+                  <Text style={styles.buttonEditText}>Edit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.buttonHapus} onPress={() => openDeleteConfirmation(item.id)}>
+                  <Text style={styles.buttonHapusText} >Hapus</Text>
+                </TouchableOpacity>
               </View>
             </View>
-            <View style={styles.wrap}>
-              <View style={styles.leftContent}>
-                <Text style={styles.title}>Jumlah Barang</Text>
-                <Text style={styles.blackText}>2</Text>
-              </View>
-              <View style={styles.rightContent}>
-                <Text style={styles.title}>Total</Text>
-                <Text style={styles.blackText}>245.000.00</Text>
-              </View>
-            </View>
-            <View style={styles.line}></View>
-            <View style={styles.wrapButton}>
-              <TouchableOpacity style={styles.buttonEdit} >
-                <Text style={styles.buttonEditText}>Edit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonHapus} >
-                <Text style={styles.buttonHapusText}>Hapus</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.card}>
-            <Text style={styles.nomorTransaksi}>01</Text>
-            <View style={styles.wrap}>
-              <View style={styles.leftContent}>
-                <Text style={styles.title}>Nama Barang</Text>
-                <Text style={styles.blackText}>Barang A</Text>
-              </View>
-              <View style={styles.rightContent}>
-                <Text style={styles.title}>Kode Barang</Text>
-                <Text style={styles.blackText}>A001</Text>
-              </View>
-            </View>
-            <View style={styles.wrap}>
-              <View style={styles.leftContent}>
-                <Text style={styles.title}>Jumlah Barang</Text>
-                <Text style={styles.blackText}>2</Text>
-              </View>
-              <View style={styles.rightContent}>
-                <Text style={styles.title}>Total</Text>
-                <Text style={styles.blackText}>245.000.00</Text>
-              </View>
-            </View>
-            <View style={styles.line}></View>
-            <View style={styles.wrapButton}>
-              <TouchableOpacity style={styles.buttonEdit} >
-                <Text style={styles.buttonEditText}>Edit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonHapus} >
-                <Text style={styles.buttonHapusText}>Hapus</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          ))}
         </View>
       </ScrollView>
+      <Modal isVisible={isModalVisible}>
+        <View style={{ backgroundColor: "white", height: 350, justifyContent: "center", alignItems: "center" }}>
+          <Text style={styles.titleModal}>Apakah yakin ingin menghapus Transaksi?</Text>
+          <MaterialIcons
+            name="delete-forever"
+            size={100}
+            color="black"
+          />
+          <View style={styles.wrapButton}>
+            <Button title="Batal" color={"grey"} onPress={toggleModal} />
+            <View style={{ paddingHorizontal: 5 }}></View>
+            <Button title="Hapus" color={"red"} onPress={() => deleteBarang(selectedItemId)} />
+          </View>
+        </View>
+      </Modal>
       <TouchableOpacity style={styles.floatingButton} onPress={inputBarang}>
         <MaterialIcons
           name="add"

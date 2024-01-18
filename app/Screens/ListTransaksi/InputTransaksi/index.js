@@ -1,7 +1,13 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
+import { useNavigation } from '@react-navigation/native';
 
 const InputTransaksi = () => {
+    const navigation = useNavigation();
+
+    const listTransaksi = () => {
+        navigation.navigate("listTransaksi");
+    };
     return (
         <View style={styles.container}>
             <Text style={styles.title}>TRANSAKSI</Text>
@@ -9,9 +15,8 @@ const InputTransaksi = () => {
                 <Text style={styles.placeholder}>Nomor</Text>
             </View>
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Nomor</Text>
                 <TextInput
-                    style={styles.inputNomor}
+                    style={styles.input}
                     placeholder="Nomor"
                 />
             </View>
@@ -19,9 +24,8 @@ const InputTransaksi = () => {
                 <Text style={styles.placeholder}>Tanggal</Text>
             </View>
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Nomor</Text>
                 <TextInput
-                    style={styles.inputNomor}
+                    style={styles.input}
                     placeholder="Tanggal"
                 />
             </View>
@@ -30,9 +34,8 @@ const InputTransaksi = () => {
                 <Text style={styles.placeholder}>Kode</Text>
             </View>
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Kode</Text>
                 <TextInput
-                    style={styles.inputNomor}
+                    style={styles.input}
                     placeholder="Kode"
                 />
             </View>
@@ -40,23 +43,21 @@ const InputTransaksi = () => {
                 <Text style={styles.placeholder}>Nama</Text>
             </View>
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>Nama</Text>
                 <TextInput
-                    style={styles.inputNomor}
+                    style={styles.input}
                     placeholder="Nama"
                 />
             </View>
             <View style={styles.placeholderContainer}>
-                <Text style={styles.placeholder}>No Telepon</Text>
+                <Text style={styles.placeholder}>no Telepon</Text>
             </View>
             <View style={styles.inputContainer}>
-                <Text style={styles.label}>No Telepon</Text>
                 <TextInput
-                    style={styles.inputNomor}
-                    placeholder="TangNo Telepon"
+                    style={styles.input}
+                    placeholder="no Telepon"
                 />
             </View>
-            <TouchableOpacity style={styles.simpanButton} >
+            <TouchableOpacity style={styles.simpanButton} onPress={listTransaksi}>
                 <Text style={styles.simpanButtonText}>Simpan</Text>
             </TouchableOpacity>
         </View>
@@ -100,11 +101,8 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         width: '100%',
     },
-    label: {
-        marginRight: 10,
-    },
-    inputNomor: {
-        height: 20,
+    input: {
+        height: 35,
         flex: 1,
     },
     simpanButton: {
@@ -118,5 +116,10 @@ const styles = StyleSheet.create({
     simpanButtonText: {
         color: 'white',
         fontWeight: 'bold',
+    },
+    errorMessage: {
+        color: 'red',
+        marginTop: 10,
+        textAlign: 'center',
     },
 })

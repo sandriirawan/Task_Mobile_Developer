@@ -1,24 +1,63 @@
 import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { DrawerActions, useNavigation } from '@react-navigation/native';
+import { DrawerActions, useFocusEffect, useNavigation } from '@react-navigation/native';
 import Modal from "react-native-modal";
+import axios from 'axios';
 
 
 const ListTransaksi = () => {
     const navigation = useNavigation();
     const [isModalVisible, setModalVisible] = useState(false);
+    const [selectedItemId, setSelectedItemId] = useState(null);
+    const [transaksi, setTransaksi] = useState([])
+
+
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('/api/transaksi');
+            setTransaksi(response?.data?.transaksi);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchData();
+        }, [])
+    );
+
+    const deleteBarang = async (id) => {
+        try {
+            await axios.delete(`/api/transaksi/${id}`);
+            toggleModal();
+            fetchData();
+        } catch (error) {
+            console.error('Error during deleting transaksi:', error);
+        }
+    };
 
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     };
 
+    const openDeleteConfirmation = (id) => {
+        setSelectedItemId(id);
+        toggleModal();
+    };
+
+
     const InputTransaksi = () => {
         navigation.navigate("inputTransaksi");
     };
 
-    const EditTransaksi = () => {
-        navigation.navigate("editTransaksi");
+    const EditTransaksi = (id) => {
+        navigation.navigate("editTransaksi", { id });
     };
 
     return (
@@ -38,151 +77,57 @@ const ListTransaksi = () => {
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.cardContainer}>
-                    <View style={styles.card}>
-                        <Text style={styles.nomorTransaksi}>202101-0001</Text>
-                        <View style={styles.wrap}>
-                            <View style={styles.leftContent}>
-                                <Text style={styles.title}>Nama Customer</Text>
-                                <Text style={styles.blackText}>Cust A</Text>
-                            </View>
-                            <View style={styles.rightContent}>
-                                <Text style={styles.title}>Tanggal</Text>
-                                <Text style={styles.blackText}>01-Januari-2024</Text>
-                            </View>
-                        </View>
-                        <View style={styles.wrap}>
-                            <View style={styles.leftContent}>
-                                <Text style={styles.title}>Jumlah Barang</Text>
-                                <Text style={styles.blackText}>2</Text>
-                            </View>
-                            <View style={styles.rightContent}>
-                                <Text style={styles.title}>Total</Text>
-                                <Text style={styles.blackText}>245.000.00</Text>
-                            </View>
-                        </View>
-                        <View style={styles.line}></View>
-                        <View style={styles.wrapButton}>
-                            <TouchableOpacity style={styles.loginEdit} onPress={EditTransaksi} >
-                                <Text style={styles.loginEditText}>Edit</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.loginHapus} onPress={toggleModal}>
-                                <Text style={styles.loginHapusText}>Hapus</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <Modal isVisible={isModalVisible}>
-                            <View style={{ backgroundColor: "white", height: 350, justifyContent: "center", alignItems: "center" }}>
-                                <Text style={styles.titleModal}>Apakah yakin ingin menghapus Transaksi?</Text>
-                                <MaterialIcons
-                                    name="delete-forever"
-                                    size={100}
-                                    color="black"
-                                />
-                                <View style={styles.wrapButton}>
-                                    <Button title="Batal" color={"grey"} onPress={toggleModal} />
-                                    <View style={{ paddingHorizontal: 5 }}></View>
-                                    <Button title="Hapus" color={"red"} onPress={toggleModal} />
+                    {transaksi?.map(item => (
+                        <View style={styles.card} key={item?.id}>
+                            <Text style={styles.nomorTransaksi}>{item?.kodeTransaksi}</Text>
+                            <View style={styles.wrap}>
+                                <View style={styles.leftContent}>
+                                    <Text style={styles.title}>Nama Customer</Text>
+                                    <Text style={styles.blackText}>Cust A</Text>
+                                </View>
+                                <View style={styles.rightContent}>
+                                    <Text style={styles.title}>Tanggal</Text>
+                                    <Text style={styles.blackText}>01-Januari-2024</Text>
                                 </View>
                             </View>
-                        </Modal>
-                    </View>
-                    <View style={styles.card}>
-                        <Text style={styles.nomorTransaksi}>202101-0001</Text>
-                        <View style={styles.wrap}>
-                            <View style={styles.leftContent}>
-                                <Text style={styles.title}>Nama Customer</Text>
-                                <Text style={styles.blackText}>Cust A</Text>
+                            <View style={styles.wrap}>
+                                <View style={styles.leftContent}>
+                                    <Text style={styles.title}>Jumlah Barang</Text>
+                                    <Text style={styles.blackText}>2</Text>
+                                </View>
+                                <View style={styles.rightContent}>
+                                    <Text style={styles.title}>Total</Text>
+                                    <Text style={styles.blackText}>245.000.00</Text>
+                                </View>
                             </View>
-                            <View style={styles.rightContent}>
-                                <Text style={styles.title}>Tanggal</Text>
-                                <Text style={styles.blackText}>01-Januari-2024</Text>
-                            </View>
-                        </View>
-                        <View style={styles.wrap}>
-                            <View style={styles.leftContent}>
-                                <Text style={styles.title}>Jumlah Barang</Text>
-                                <Text style={styles.blackText}>2</Text>
-                            </View>
-                            <View style={styles.rightContent}>
-                                <Text style={styles.title}>Total</Text>
-                                <Text style={styles.blackText}>245.000.00</Text>
+                            <View style={styles.line}></View>
+                            <View style={styles.wrapButton}>
+                                <TouchableOpacity style={styles.loginEdit}  onPress={() => EditTransaksi(item.id)} >
+                                    <Text style={styles.loginEditText}>Edit</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.loginHapus} onPress={() => openDeleteConfirmation(item.id)}>
+                                    <Text style={styles.loginHapusText}>Hapus</Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
-                        <View style={styles.line}></View>
-                        <View style={styles.wrapButton}>
-                            <TouchableOpacity style={styles.loginEdit} >
-                                <Text style={styles.loginEditText}>edit</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.loginHapus} >
-                                <Text style={styles.loginHapusText}>edit</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={styles.card}>
-                        <Text style={styles.nomorTransaksi}>202101-0001</Text>
-                        <View style={styles.wrap}>
-                            <View style={styles.leftContent}>
-                                <Text style={styles.title}>Nama Customer</Text>
-                                <Text style={styles.blackText}>Cust A</Text>
-                            </View>
-                            <View style={styles.rightContent}>
-                                <Text style={styles.title}>Tanggal</Text>
-                                <Text style={styles.blackText}>01-Januari-2024</Text>
-                            </View>
-                        </View>
-                        <View style={styles.wrap}>
-                            <View style={styles.leftContent}>
-                                <Text style={styles.title}>Jumlah Barang</Text>
-                                <Text style={styles.blackText}>2</Text>
-                            </View>
-                            <View style={styles.rightContent}>
-                                <Text style={styles.title}>Total</Text>
-                                <Text style={styles.blackText}>245.000.00</Text>
-                            </View>
-                        </View>
-                        <View style={styles.line}></View>
-                        <View style={styles.wrapButton}>
-                            <TouchableOpacity style={styles.loginEdit} >
-                                <Text style={styles.loginEditText}>edit</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.loginHapus} >
-                                <Text style={styles.loginHapusText}>edit</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={styles.card}>
-                        <Text style={styles.nomorTransaksi}>202101-0001</Text>
-                        <View style={styles.wrap}>
-                            <View style={styles.leftContent}>
-                                <Text style={styles.title}>Nama Customer</Text>
-                                <Text style={styles.blackText}>Cust A</Text>
-                            </View>
-                            <View style={styles.rightContent}>
-                                <Text style={styles.title}>Tanggal</Text>
-                                <Text style={styles.blackText}>01-Januari-2024</Text>
-                            </View>
-                        </View>
-                        <View style={styles.wrap}>
-                            <View style={styles.leftContent}>
-                                <Text style={styles.title}>Jumlah Barang</Text>
-                                <Text style={styles.blackText}>2</Text>
-                            </View>
-                            <View style={styles.rightContent}>
-                                <Text style={styles.title}>Total</Text>
-                                <Text style={styles.blackText}>245.000.00</Text>
-                            </View>
-                        </View>
-                        <View style={styles.line}></View>
-                        <View style={styles.wrapButton}>
-                            <TouchableOpacity style={styles.loginEdit} >
-                                <Text style={styles.loginEditText}>edit</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.loginHapus} >
-                                <Text style={styles.loginHapusText}>edit</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+                    ))}
                 </View>
             </ScrollView>
+            <Modal isVisible={isModalVisible}>
+                <View style={{ backgroundColor: "white", height: 350, justifyContent: "center", alignItems: "center" }}>
+                    <Text style={styles.titleModal}>Apakah yakin ingin menghapus Transaksi?</Text>
+                    <MaterialIcons
+                        name="delete-forever"
+                        size={100}
+                        color="black"
+                    />
+                    <View style={styles.wrapButton}>
+                        <Button title="Batal" color={"grey"} onPress={toggleModal} />
+                        <View style={{ paddingHorizontal: 5 }}></View>
+                        <Button title="Hapus" color={"red"} onPress={() => deleteBarang(selectedItemId)} />
+                    </View>
+                </View>
+            </Modal>
             <TouchableOpacity style={styles.floatingButton} onPress={InputTransaksi}>
                 <MaterialIcons
                     name="add"
