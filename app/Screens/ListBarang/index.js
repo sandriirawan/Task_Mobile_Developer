@@ -1,4 +1,4 @@
-import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { DrawerActions, useFocusEffect, useNavigation } from '@react-navigation/native';
@@ -9,6 +9,7 @@ import axios from 'axios';
 const ListBarang = () => {
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isSearchVisible, setSearchVisible] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [barang, setBarang] = useState([])
 
@@ -68,14 +69,25 @@ const ListBarang = () => {
           onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
 
         />
-        <MaterialIcons
-          name="search"
-          size={25}
-          color="white"
-        />
+        {!isSearchVisible ? (
+          <MaterialIcons
+            name="search"
+            size={25}
+            color="white"
+            onPress={() => setSearchVisible(true)}
+          />
+        ) : (
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search..."
+            onChangeText={(text) => {
+            }}
+            onBlur={() => setSearchVisible(false)}
+          />
+        )}
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.cardContainer}>
+        <View style={styles.cardContainer} >
           <Text style={styles.titleBarang}>LIST BARANG</Text>
           {barang.map(item => (
             <View style={styles.card} key={item.id}>
@@ -115,7 +127,7 @@ const ListBarang = () => {
       </ScrollView>
       <Modal isVisible={isModalVisible}>
         <View style={{ backgroundColor: "white", height: 350, justifyContent: "center", alignItems: "center" }}>
-          <Text style={styles.titleModal}>Apakah yakin ingin menghapus Transaksi?</Text>
+          <Text style={styles.titleModal}>Apakah yakin ingin menghapus Barang?</Text>
           <MaterialIcons
             name="delete-forever"
             size={100}
@@ -252,5 +264,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 5,
+  },
+  searchInput: {
+    flex: 1,
+    height: 40,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    marginHorizontal: 10,
+    paddingHorizontal: 15,
   },
 });

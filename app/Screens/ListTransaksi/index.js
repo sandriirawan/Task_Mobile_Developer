@@ -1,4 +1,4 @@
-import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { DrawerActions, useFocusEffect, useNavigation } from '@react-navigation/native';
@@ -9,6 +9,7 @@ import axios from 'axios';
 const ListTransaksi = () => {
     const navigation = useNavigation();
     const [isModalVisible, setModalVisible] = useState(false);
+    const [isSearchVisible, setSearchVisible] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState(null);
     const [transaksi, setTransaksi] = useState([])
 
@@ -69,11 +70,22 @@ const ListTransaksi = () => {
                     color="white"
                     onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
                 />
-                <MaterialIcons
-                    name="search"
-                    size={25}
-                    color="white"
-                />
+                {!isSearchVisible ? (
+                    <MaterialIcons
+                        name="search"
+                        size={25}
+                        color="white"
+                        onPress={() => setSearchVisible(true)}
+                    />
+                ) : (
+                    <TextInput
+                        style={styles.searchInput}
+                        placeholder="Search..."
+                        onChangeText={(text) => {
+                        }}
+                        onBlur={() => setSearchVisible(false)}
+                    />
+                )}
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.cardContainer}>
@@ -102,7 +114,7 @@ const ListTransaksi = () => {
                             </View>
                             <View style={styles.line}></View>
                             <View style={styles.wrapButton}>
-                                <TouchableOpacity style={styles.loginEdit}  onPress={() => EditTransaksi(item.id)} >
+                                <TouchableOpacity style={styles.loginEdit} onPress={() => EditTransaksi(item.id)} >
                                     <Text style={styles.loginEditText}>Edit</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.loginHapus} onPress={() => openDeleteConfirmation(item.id)}>
@@ -245,5 +257,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 5,
+    },
+    searchInput: {
+        flex: 1,
+        height: 40,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        marginHorizontal: 10,
+        paddingHorizontal: 15,
     },
 });
