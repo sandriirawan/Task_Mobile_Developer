@@ -16,21 +16,29 @@ const InputBarang = () => {
                 setErrorMessage('Mohon isi semua input.');
                 return;
             }
+    
             const totalBarang = parseInt(hargaBarang) * parseInt(jumlahBarang);
-            const response = await fetch('/api/barang', {
-                method: 'POST',
+    
+            const response = await axios.post('/api/barang', {
+                namaBarang,
+                kodeBarang,
+                hargaBarang,
+                jumlahBarang,
+                totalBarang
+            }, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ namaBarang, kodeBarang, hargaBarang, jumlahBarang, totalBarang }),
             });
-            if (response.ok === true) {
+    
+            if (response.status === 200) {
                 navigation.navigate('listBarang');
             }
         } catch (error) {
             console.error('Error during insertion:', error);
         }
     };
+    
 
     return (
         <View style={styles.container}>

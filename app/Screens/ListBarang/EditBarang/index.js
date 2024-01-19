@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 const EditBarang = ({ route }) => {
     const { id } = route.params
@@ -15,7 +16,7 @@ const EditBarang = ({ route }) => {
     useEffect(() => {
         const fetchBarangDetails = async () => {
             try {
-                const response = await fetch(`/api/barang/${id}`);
+                const response = await axios.get(`/api/barang/${id}`);
                 if (response.ok) {
                     const barang = await response.json();
                     setNamaBarang(barang.namaBarang);
@@ -36,15 +37,19 @@ const EditBarang = ({ route }) => {
 
     const editBarang = async () => {
         try {
-            const response = await fetch(`/api/barang/${id}`, {
-                method: 'PUT',
+            const response = await axios.put(`/api/barang/${id}`, {
+                namaBarang,
+                kodeBarang,
+                hargaBarang,
+                jumlahBarang,
+                totalBarang
+            }, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ namaBarang, kodeBarang, hargaBarang, jumlahBarang, totalBarang }),
             });
 
-            if (response.ok) {
+            if (response.status === 200) {
                 navigation.navigate('listBarang');
             } else {
                 console.error('Failed to edit barang:', response.statusText);
