@@ -17,22 +17,17 @@ const EditBarang = ({ route }) => {
         const fetchBarangDetails = async () => {
             try {
                 const response = await axios.get(`/api/barang/${id}`);
-                if (response.ok) {
-                    const barang = await response.json();
-                    setNamaBarang(barang.namaBarang);
-                    setKodeBarang(barang.kodeBarang);
-                    setHargaBarang(String(barang.hargaBarang));
-                    setJumlahBarang(String(barang.jumlahBarang));
-                    setTotalBarang(String(barang.totalBarang));
-                } else {
-                    console.error('Failed to fetch barang details:', response.statusText);
-                }
+                const barang = response.data;
+                setNamaBarang(barang.namaBarang);
+                setKodeBarang(barang.kodeBarang);
+                setHargaBarang(String(barang.hargaBarang));
+                setJumlahBarang(String(barang.jumlahBarang));
+                setTotalBarang(String(barang.totalBarang));
             } catch (error) {
                 console.error('Error during fetching barang details:', error);
             }
         };
-
-        fetchBarangDetails();
+        fetchBarangDetails()
     }, [id]);
 
     const editBarang = async () => {
@@ -42,11 +37,7 @@ const EditBarang = ({ route }) => {
                 kodeBarang,
                 hargaBarang,
                 jumlahBarang,
-                totalBarang
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                totalBarang,
             });
 
             if (response.status === 200) {

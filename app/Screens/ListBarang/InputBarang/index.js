@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 const InputBarang = () => {
     const navigation = useNavigation();
@@ -16,9 +17,9 @@ const InputBarang = () => {
                 setErrorMessage('Mohon isi semua input.');
                 return;
             }
-    
+
             const totalBarang = parseInt(hargaBarang) * parseInt(jumlahBarang);
-    
+
             const response = await axios.post('/api/barang', {
                 namaBarang,
                 kodeBarang,
@@ -30,15 +31,15 @@ const InputBarang = () => {
                     'Content-Type': 'application/json',
                 },
             });
-    
-            if (response.status === 200) {
+            console.log(response.status);
+            if (response.status === 201) {
                 navigation.navigate('listBarang');
             }
         } catch (error) {
             console.error('Error during insertion:', error);
         }
     };
-    
+
 
     return (
         <View style={styles.container}>
